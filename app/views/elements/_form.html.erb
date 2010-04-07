@@ -1,0 +1,14 @@
+<%= f.error_messages %>
+<p>
+<%= f.label :title %><br />
+<%= f.text_field :title %>
+</p>
+<p>
+<%= f.label :category_id %><br />
+<%= category_selector(@category, :element, :category, false, :singleSelectionTree => 'true') %>
+
+</p>
+<p>
+<%= f.label :second_category_id %><br />
+<%= category_selector(@category, :element, :second_category, false, :singleSelectionTree => 'true') %>
+</p>
