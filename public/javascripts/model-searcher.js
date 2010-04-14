@@ -123,7 +123,7 @@ function ModelSearcher(){
 				}else{
 					thisModelSearcher.treeLoading.html(' <img src="/images/ajax-loader.gif" />');
 					jQuery.getJSON(thisModelSearcher.treeService, function(data){
-						thisModelSearcher.treeHtml = thisModelSearcher.createTreeFromArray(data.category);
+						thisModelSearcher.treeHtml = thisModelSearcher.createTreeFromArray(data.category ? data.category.categories : data.categories);
 						thisModelSearcher.loadPopup();
 						thisModelSearcher.treeHtml = null;
 						data = null;
@@ -225,22 +225,22 @@ function ModelSearcher(){
 	
 	this.createTreeFromArray = function(arr){
 		var html = '';
-		if(arr.categories && arr.categories.category){
+		if(arr && arr.category){
 			html += '<ul class="tree">';
-			if(arr.categories.category && arr.categories.category[0]){
-				for(var i in arr.categories.category) {
+			if(arr.category && arr.category[0]){
+				for(var i in arr.category) {
 					html += '<li>';
-					html += '<input type="checkbox" class="toggle"><label name="record_'+arr.categories.category[i].id+'">'+arr.categories.category[i].title+'</label>';
-					if(arr.categories.category[i].categories){
-						html += this.createTreeFromArray(arr.categories.category[i]);
+					html += '<input type="checkbox" class="toggle"><label name="record_'+arr.category[i].id+'">'+arr.category[i].title+'</label>';
+					if(arr.category[i].categories){
+						html += this.createTreeFromArray(arr.category[i].categories);
 					}
 					html += '</li>';
 				}
-			}else if(arr.categories.category){
+			}else if(arr.category){
 				html += '<li>';
-				html += '<input type="checkbox" class="toggle"><label name="record_'+arr.categories.category.id+'">'+arr.categories.category.title+'</label>';
-				if(arr.categories.category.categories){
-					html += this.createTreeFromArray(arr.categories.category);
+				html += '<input type="checkbox" class="toggle"><label name="record_'+arr.category.id+'">'+arr.category.title+'</label>';
+				if(arr.category.categories){
+					html += this.createTreeFromArray(arr.category.categories);
 				}
 				html += '</li>';
 			}
