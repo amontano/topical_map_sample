@@ -58,9 +58,9 @@ ul.tree li .checkbox_placeholder {
 	float:left;
 	padding-left:2px;
 	padding-right:0;
-	width:16px;
+	width:24px;
 	height:16px;
-	background: url(/images/jquery_checktree/btn-empty-lg.gif) no-repeat 2px 5px;
+	background: url(/images/jquery_checktree/btn-empty-lg.gif) no-repeat 6px 5px;
 }
 ul.tree li .checked {
 	background-image: url(/images/jquery_checktree/check2.gif);
