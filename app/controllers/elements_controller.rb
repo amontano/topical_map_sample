@@ -25,7 +25,7 @@ class ElementsController < AclController
   # GET /elements/new.xml
   def new
     @element = Element.new
-    @category = Category.find(272)
+    @root_category = Category.find(272)
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @element }
@@ -35,7 +35,7 @@ class ElementsController < AclController
   # GET /elements/1/edit
   def edit
     @element = Element.find(params[:id])
-    @category = Category.find(272)
+    @root_category = Category.find(272)
   end
 
   # POST /elements
@@ -49,6 +49,7 @@ class ElementsController < AclController
         format.html { redirect_to(@element) }
         format.xml  { render :xml => @element, :status => :created, :location => @element }
       else
+        @root_category = Category.find(272)
         format.html { render :action => "new" }
         format.xml  { render :xml => @element.errors, :status => :unprocessable_entity }
       end
@@ -59,13 +60,13 @@ class ElementsController < AclController
   # PUT /elements/1.xml
   def update
     @element = Element.find(params[:id])
-
     respond_to do |format|
       if @element.update_attributes(params[:element])
         flash[:notice] = 'Element was successfully updated.'
         format.html { redirect_to(@element) }
         format.xml  { head :ok }
       else
+        @root_category = Category.find(272)
         format.html { render :action => "edit" }
         format.xml  { render :xml => @element.errors, :status => :unprocessable_entity }
       end
