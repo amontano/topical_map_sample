@@ -5,9 +5,9 @@
 </p>
 <p>
 <%= f.label :category_id, 'Subject' %><br />
-<%= category_selector(@root_category, :element, :category, false, :singleSelectionTree => 'true') %>
+<%= category_selector('category_id', @root_category, :element, :category, false, :singleSelectionTree => 'true') %>
 </p>
 <p>
 <%= f.label :second_category_id, 'General association' %><br />
-<%= category_selector(nil, :element, :second_category, false, :singleSelectionTree => 'true') %>
+<%= category_selector('second_category_id', nil, :element, :second_category, false, :singleSelectionTree => 'true') %>
 </p>
