@@ -3,10 +3,9 @@
   <%=h @element.title %>
 </p>
 
-<p>
-  <b>Subject:</b>
-  <%=h @element.category.title %>
-</p>
+<p><% category_header = @element.category_header %>
+<%= "<b>#{category_header}</b>" if !category_header.blank? %>
+<%=h @element.category.title %></p>
 
 <p>
   <b>Collection:</b>

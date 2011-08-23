@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100406231008) do
+ActiveRecord::Schema.define(:version => 20110823050057) do
 
   create_table "elements", :force => true do |t|
     t.string   "title"
@@ -17,6 +17,8 @@ ActiveRecord::Schema.define(:version => 20100406231008) do
     t.integer  "second_category_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "show_parent",        :default => false, :null => false
+    t.boolean  "show_root",          :default => true,  :null => false
   end
 
   create_table "languages", :force => true do |t|
