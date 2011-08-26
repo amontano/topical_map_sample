@@ -4,10 +4,39 @@
 <%= f.text_field :title %>
 </p>
 <p>
-<%= f.label :category_id, 'Subject' %><br />
-<%= category_selector(@root_category, :element, :category, false, :singleSelectionTree => 'true') %>
+<%#= f.label :category_id, 'Subject' %><br />
+<%#= category_selector(@root_category, :element, :category, false, :singleSelectionTree => 'true') %>
+<table class='mobj' border='0' cellspacing='0'>
+	<%=
+		category_fields({
+			:subject => {:display => :category_id, :label => 'Subject'}, 
+			:root => Category.find(5812), #@root_category,  #nil
+			:varname => :element,
+			:hastree => 'true',
+			:selectable => true,
+			:fieldname => :category,
+			:include_js => true
+		})
+	%> 
+<tr><td></td></tr>
+</table>
+
 </p>
 <p>
-<%= f.label :second_category_id, 'General association' %><br />
-<%= category_selector(nil, :element, :second_category, false, :singleSelectionTree => 'true') %>
+<%#= f.label :second_category_id, 'General association' %><br />
+<%#= category_selector(nil, :element, :second_category, false, :singleSelectionTree => 'true') %>
+<!--<table class='mobj' border='0' cellspacing='0'>
+	<%#=
+		category_fields({
+			:subject => {:display => :second_category_id, :label => 'General association'}, 
+			:root => @root_category,  #nil
+			:varname => :element,
+			:hastree => 'true',
+			:selectable => false,
+			:fieldname => :second_category,
+			:include_js => false
+		})
+	%> 
+<tr><td></td></tr>
+</table>-->
 </p>

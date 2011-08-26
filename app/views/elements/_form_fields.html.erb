@@ -1,0 +1,23 @@
+<%= error_messages_for :element %>
+
+<%=
+	category_fields({
+		:subject => {:display => 'Category', :label => 'Category Label'}, # 6/21/11 jev3a asks why is this hidden field in the label?
+		:root => nil, #@root_category,  #nil
+		:varname => :element,
+		:hastree => 'true',
+		:selectable => false,
+		:fieldname => :category
+	})
+%>
+
+<%=
+	category_fields({
+		:subject => {:display => 'Second Category', :label => 'Second Category Label'}, # 6/21/11 jev3a asks why is this hidden field in the label?
+		:root => @root_category,  #nil
+		:varname => :element,
+		:hastree => 'true',
+		:selectable => false,
+		:fieldname => :second_category
+	})
+%>

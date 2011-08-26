@@ -5,12 +5,17 @@
 
 <p>
   <b>Subject:</b>
-  <%=h @element.category.title %>
+
+  <% if not @element.category.nil?%>
+    <%=h @element.category.title %>
+  <% end %>
 </p>
 
 <p>
   <b>Collection:</b>
-  <%=h @element.second_category.title %>
+  <% if not @element.second_category.nil?%>
+    <%=h @element.second_category.title %>
+  <% end %>
 </p>
 
 

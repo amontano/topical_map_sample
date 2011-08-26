@@ -9,9 +9,9 @@
 
 <% @elements.each do |element| %>
   <tr>
-    <td><%=h element.title %></td>
-    <td><%=h element.category.title %></td>
-    <td><%=h element.second_category.title %></td>
+    <td><%=h element.title  %></td>
+    <td><%=h element.category.title if not element.category.nil?%></td>
+    <td><%=h element.second_category.title if not element.second_category.nil? %></td>
     <td><%= link_to 'Show', element %></td>
     <td><%= link_to 'Edit', edit_element_path(element) %></td>
     <td><%= link_to 'Destroy', element, :confirm => 'Are you sure?', :method => :delete %></td>
