@@ -1,6 +1,7 @@
 class Element < ActiveRecord::Base
   belongs_to :category
   belongs_to :second_category, :class_name => 'Category'
+  has_many :category_element_associations, :dependent => :destroy
   
   def category_header
     return '' if !self.show_root? && !self.show_parent?
@@ -11,9 +12,8 @@ class Element < ActiveRecord::Base
   end
 end
 
-
 # == Schema Info
-# Schema version: 20110823050057
+# Schema version: 20110827201144
 #
 # Table name: elements
 #

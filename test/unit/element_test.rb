@@ -7,9 +7,8 @@ class ElementTest < ActiveSupport::TestCase
   end
 end
 
-
 # == Schema Info
-# Schema version: 20110823050057
+# Schema version: 20110827201144
 #
 # Table name: elements
 #

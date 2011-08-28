@@ -3,11 +3,8 @@
 <%= f.label :title %><br />
 <%= f.text_field :title %>
 </p>
-<%=	category_fields :subject => {:label => 'Subject'}, :root => @root_category, :varname => :element, :fieldname => :category, :include_js => false, :include_styles => true, :selectable => selectable,
+<%=	category_fields :subject => {:label => 'Single specific association (subject)'}, :root => @root_category, :varname => :element, :fieldname => :category, :include_js => false, :include_styles => true, :selectable => selectable,
 		:extrafields => [{:field => f.check_box(:show_parent), :label => Element.human_attribute_name(:show_parent).s},
-        {:field => f.check_box(:show_root), :label => Element.human_attribute_name(:show_root).s}]
-%>
-<%=	category_fields :subject => {:label => 'General association'}, :varname => :element, :fieldname => :second_category, :include_js => false, :include_styles => false, :selectable => selectable
-		#:extrafields => [{:field => f.text_field(:string_value), :label => MediaCategoryAssociation.human_attribute_name(:string_value).s},
-		#	{:field => f.text_field(:numeric_value), :label => MediaCategoryAssociation.human_attribute_name(:numeric_value).s}]
-%>
+        {:field => f.check_box(:show_root), :label => Element.human_attribute_name(:show_root).s}] %>
+<%=	category_fields :subject => {:label => 'Single generic association'}, :varname => :element, :fieldname => :second_category, :include_js => false, :include_styles => false, :selectable => selectable %>
+<%=	category_fields :subject => {:label => 'Multiple associations'}, :varname => :element, :fieldname => :category_element_associations, :include_js => false, :include_styles => false, :selectable => selectable %>

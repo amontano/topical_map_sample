@@ -1,17 +1,17 @@
-<p>
-  <b>Title:</b>
-  <%=h @element.title %>
-</p>
-
-<p><% category_header = @element.category_header %>
-<%= "<b>#{category_header}</b>" if !category_header.blank? %>
+<%= display_if_not_blank 'Title', h(@element.title) %>
+<% if @element.category %>
+     <p><% category_header = @element.category_header %>
+<%=  "<b>#{category_header}</b>" if !category_header.blank? %>
 <%=h @element.category.title %></p>
-
-<p>
-  <b>Collection:</b>
-  <%=h @element.second_category.title %>
-</p>
-
-
+<% end 
+   if @element.second_category %>
+<%=  display_if_not_blank 'Single Generic Association', h(@element.second_category.title) %>
+<% end
+   associations = @element.category_element_associations
+   if !associations.empty? %>
+     <p><b>Multiple associations:</b>
+<%=    associations.collect{|a| a.category.title}.join(', ') %>
+     </p>
+<% end %>
 <%= link_to 'Edit', edit_element_path(@element) %> |
 <%= link_to 'Back', elements_path %>

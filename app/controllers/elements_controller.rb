@@ -41,10 +41,15 @@ class ElementsController < AclController
   # POST /elements
   # POST /elements.xml
   def create
-    @element = Element.new(params[:element])
-
+    element_params = params[:element]
+    element_params[:category_id] = element_params[:category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
+    element_params[:second_category_id] = element_params[:second_category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
+    category_ids = element_params.delete(:category_element_associations_id).split(',').collect(&:strip).reject(&:blank?).collect(&:to_i)
+    @element = Element.new(element_params)
     respond_to do |format|
       if @element.save
+        assoc = @element.category_element_associations
+        category_ids.each{|c_id| assoc.create :category_id => c_id}
         flash[:notice] = 'Element was successfully created.'
         format.html { redirect_to(@element) }
         format.xml  { render :xml => @element, :status => :created, :location => @element }
@@ -61,7 +66,13 @@ class ElementsController < AclController
   def update
     @element = Element.find(params[:id])
     respond_to do |format|
-      if @element.update_attributes(params[:element])
+      element_params = params[:element]
+      element_params[:category_id] = element_params[:category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
+      element_params[:second_category_id] = element_params[:second_category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
+      category_ids = element_params.delete(:category_element_associations_id).split(',').collect(&:strip).reject(&:blank?).collect(&:to_i)      
+      if @element.update_attributes(element_params)
+        assoc = @element.category_element_associations
+        category_ids.each{|c_id| assoc.create :category_id => c_id}
         flash[:notice] = 'Element was successfully updated.'
         format.html { redirect_to(@element) }
         format.xml  { head :ok }

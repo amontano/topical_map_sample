@@ -9,7 +9,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110823050057) do
+ActiveRecord::Schema.define(:version => 20110827201144) do
+
+  create_table "category_element_associations", :force => true do |t|
+    t.integer  "category_id", :null => false
+    t.integer  "element_id",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "elements", :force => true do |t|
     t.string   "title"

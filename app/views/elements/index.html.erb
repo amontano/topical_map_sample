@@ -3,15 +3,17 @@
 <table border="1">
   <tr>
     <th>Title</th>
-    <th>Category</th>
-    <th>Second category</th>
+    <th>Single Specific Association (Subject)</th>
+    <th>Single Generic Association</th>
+    <th>Multiple Associations</th>
   </tr>
 
 <% @elements.each do |element| %>
   <tr>
     <td><%=h element.title %></td>
-    <td><%=h element.category.title %></td>
-    <td><%=h element.second_category.title %></td>
+    <td><%=h(element.category.title) if element.category %></td>
+    <td><%=h(element.second_category.title) if element.second_category %></td>
+    <td><%= element.category_element_associations.collect{|a| a.category.title}.join(', ') %></td>
     <td><%= link_to 'Show', element %></td>
     <td><%= link_to 'Edit', edit_element_path(element) %></td>
     <td><%= link_to 'Destroy', element, :confirm => 'Are you sure?', :method => :delete %></td>
