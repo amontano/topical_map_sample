@@ -2,5 +2,4 @@
 <% form_for(@element) do |f| %>
 <%=   category_form_table :locals => { :f => f, :selectable => true}, :form_partial => 'form', :footer => globalized_submit_tag('update.this', :style => 'margin-top:8px;') %>
 <% end %>
-<%= link_to 'Show', @element %> |
-<%= link_to 'Back', elements_path %>
+<p><%= render :partial => 'persistent_links' %></p>

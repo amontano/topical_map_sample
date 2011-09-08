@@ -1,0 +1,5 @@
+<h1>Listing associations to <%= @element.title %></h1>
+<%= render :partial => 'index', :locals => {:category_associations => @category_element_associations, :element => @element} %>
+<%= link_to 'New category_element_association', new_element_category_association_path(@element) %> |
+<%= link_to ts('back.to', :what => @element.title), authorized?(hash_for_edit_element_path) ? edit_element_path(@element) : element_path(@element) %> |
+<%= link_to 'Back to elements', elements_path %>

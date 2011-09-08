@@ -1,0 +1,6 @@
+<h1>Editing category_element_association</h1>
+
+<% form_for(:category_element_association, :url => element_category_association_path(@element, @category_element_association), :html => { :method => :put }) do |f| %>
+<%=   category_form_table :locals => { :f => f, :selectable => true}, :form_partial => 'form', :footer => globalized_submit_tag('update.this', :style => 'margin-top:8px;') %>
+<% end %>
+<p><%= render :partial => 'persistent_links' %></p>

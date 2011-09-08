@@ -1,0 +1,5 @@
+<%  authorized_only hash_for_element_category_association_path(:action => 'destroy') do %>
+<%=   link_to ts('delete.this'), element_category_association_path(@element, @category_element_association), :confirm => te('delete.confirmation'), :method => :delete %> |
+<%  end %>
+<%= link_to ts('back.to', :what => @element.title), authorized?(hash_for_edit_element_path) ? edit_element_path(@element) : element_path(@element) %> |
+<%= link_to 'Back to elements', elements_path %>

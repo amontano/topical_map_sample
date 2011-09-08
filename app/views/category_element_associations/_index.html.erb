@@ -1,0 +1,7 @@
+<ul>
+<% category_associations.each do |association| %>
+     <li><% category_header = association.category_header %>
+<%=  category_header if !category_header.blank? %>
+<%=h link_to(association.category.title, authorized?(hash_for_edit_element_category_association_path) ? edit_element_category_association_path(element, association) : element_category_association_path(element, association)) %></li>
+<% end %>
+</ul>

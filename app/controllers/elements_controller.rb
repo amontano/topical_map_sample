@@ -42,16 +42,14 @@ class ElementsController < AclController
   # POST /elements.xml
   def create
     element_params = params[:element]
-    element_params[:category_id] = element_params[:category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
-    element_params[:second_category_id] = element_params[:second_category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
-    category_ids = element_params.delete(:category_element_associations_id).split(',').collect(&:strip).reject(&:blank?).collect(&:to_i)
+    associations_param = element_params.delete(:category_element_associations)
     @element = Element.new(element_params)
     respond_to do |format|
       if @element.save
-        assoc = @element.category_element_associations
-        category_ids.each{|c_id| assoc.create :category_id => c_id}
+        associations = @element.category_element_associations
+        associations_param[:category_ids].each{|c_id| associations.create :category_id => c_id.to_i}
         flash[:notice] = 'Element was successfully created.'
-        format.html { redirect_to(@element) }
+        format.html { redirect_to elements_url }
         format.xml  { render :xml => @element, :status => :created, :location => @element }
       else
         @root_category = Category.find(272)
@@ -67,14 +65,15 @@ class ElementsController < AclController
     @element = Element.find(params[:id])
     respond_to do |format|
       element_params = params[:element]
-      element_params[:category_id] = element_params[:category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
-      element_params[:second_category_id] = element_params[:second_category_id].split(',').collect(&:strip).detect{|e| !e.blank?}
-      category_ids = element_params.delete(:category_element_associations_id).split(',').collect(&:strip).reject(&:blank?).collect(&:to_i)      
+      associations_param = element_params.delete(:category_element_associations)
       if @element.update_attributes(element_params)
-        assoc = @element.category_element_associations
-        category_ids.each{|c_id| assoc.create :category_id => c_id}
+        associations = @element.category_element_associations
+        associated_category_ids = associations.collect(&:category_id)
+        category_ids_to_be_associated = associations_param[:category_ids].collect(&:to_i)
+        (associated_category_ids - category_ids_to_be_associated).each{|c_id| associations.all(:conditions => {:category_id => c_id}).each(&:destroy)}
+        (category_ids_to_be_associated - associated_category_ids).each{|c_id| associations.create :category_id => c_id.to_i}
         flash[:notice] = 'Element was successfully updated.'
-        format.html { redirect_to(@element) }
+        format.html { redirect_to elements_url }
         format.xml  { head :ok }
       else
         @root_category = Category.find(272)

@@ -1,0 +1,2 @@
+module CategoryElementAssociationsHelper
+end

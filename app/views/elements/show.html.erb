@@ -1,17 +1,16 @@
 <%= display_if_not_blank 'Title', h(@element.title) %>
-<% if @element.category %>
-     <p><% category_header = @element.category_header %>
-<%=  "<b>#{category_header}</b>" if !category_header.blank? %>
-<%=h @element.category.title %></p>
-<% end 
-   if @element.second_category %>
-<%=  display_if_not_blank 'Single Generic Association', h(@element.second_category.title) %>
-<% end
-   associations = @element.category_element_associations
-   if !associations.empty? %>
-     <p><b>Multiple associations:</b>
-<%=    associations.collect{|a| a.category.title}.join(', ') %>
-     </p>
+<%= display_if_not_blank 'Single Specific Association (Subject)', h(@element.category.title) %>
+<%= display_if_not_blank 'Single Generic Association', h(@element.second_category.title) %>
+<%  associations = @element.category_element_associations
+    if !associations.empty? %>
+      <p><b>Multiple associations:</b>
+<%    authorized_only hash_for_new_element_category_association_path do %>
+(<%=    link_to 'new association', new_element_category_association_path(@element) %>)
+<%    end %>
+<%=   render :partial => 'category_element_associations/index', :locals => {:category_associations => associations, :element => @element} %></p>
+<%  end %>
+<p><% authorized_only hash_for_edit_element_path do %>
+<%=  link_to ts('edit.this'), edit_element_path(@element) %> |
 <% end %>
-<%= link_to 'Edit', edit_element_path(@element) %> |
-<%= link_to 'Back', elements_path %>
+<%= render :partial => 'persistent_links' %>
+</p>

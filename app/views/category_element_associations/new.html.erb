@@ -1,0 +1,7 @@
+<h1>New category_element_association</h1>
+<% form_for(:category_element_association, :url => element_category_associations_path(@element)) do |f| %>
+<%=   category_form_table :locals => { :f => f, :selectable => true}, :form_partial => 'form', :footer => globalized_submit_tag('create.this', :style => 'margin-top:8px;') %>
+<% end %>
+<%= link_to 'Back to associations', element_category_associations_path(@element) %> |
+<%= link_to ts('back.to', :what => @element.title), authorized?(hash_for_edit_element_path) ? edit_element_path(@element) : element_path(@element) %> |
+<%= link_to 'Back to elements', elements_path %>

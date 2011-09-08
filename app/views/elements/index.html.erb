@@ -10,13 +10,12 @@
 
 <% @elements.each do |element| %>
   <tr>
-    <td><%=h element.title %></td>
+    <td><%=link_to(h(element.title), authorized?(hash_for_edit_element_path) ? edit_element_path(element) : element_path(element)) %></td>
     <td><%=h(element.category.title) if element.category %></td>
     <td><%=h(element.second_category.title) if element.second_category %></td>
-    <td><%= element.category_element_associations.collect{|a| a.category.title}.join(', ') %></td>
-    <td><%= link_to 'Show', element %></td>
-    <td><%= link_to 'Edit', edit_element_path(element) %></td>
-    <td><%= link_to 'Destroy', element, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td>
+<%=   render :partial => 'category_element_associations/index', :locals => {:category_associations => element.category_element_associations, :element => element} %>
+    </td>
   </tr>
 <% end %>
 </table>

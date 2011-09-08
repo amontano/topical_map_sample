@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :elements
+  map.resources :elements do |element|
+    element.resources(:category_associations, :controller => 'category_element_associations')
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
 

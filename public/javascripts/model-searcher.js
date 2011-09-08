@@ -1,5 +1,4 @@
 function ModelSearcher(){
-
 	// URL for JSON that lists categories in the form [{"name":"Agricultrure","id":4074},{"name":"Agriculture","id":2558}]
 	this.listService = "";
 	
@@ -44,7 +43,7 @@ function ModelSearcher(){
 	this.selectedRootOriginal = null;
 	
 	// Whether the user can select only one category from the tree (if present) or select multiple categories
-	this.singleSelectionTree = false;
+	this.singleSelection = false;
 	
 	// The id attribute of the div which contains the tree popup
 	this.treePopupId = null;
@@ -78,7 +77,7 @@ function ModelSearcher(){
 			var id = label = '';
 		}
 
-		if ( id != 'All' ) {
+		if ( id != 'All' && id.length > 0) {
 			options['hasTree'] = true;
 			options['fieldLabel'] = label;
 			listService = options['list_url_topic'].replace('{id}', id);
@@ -100,6 +99,7 @@ function ModelSearcher(){
 		this.cRowSelector = '#' + this.varname + '_characteristic-row';
 		this.bRowID = this.varname + '_bin';
 		this.binItemTemplate = '<span id="' + this.varname + '_bin_item_{id}" class="tree-names" style="line-height:19px;white-space:nowrap;padding:2px 3px 2px 2px; color:#404040; background-color:#f1f1f1; border:1pt #ccc solid;margin-right:3px;font-size:7pt"><a href="#" class="tree-remove"><img src="/images/delete.png" height=16 width=16 border=0 alt="x" style="display:inline;position:relative;top:4px;left:-2px"/></a>{content}</span> ';
+		this.binHiddenFieldTemplate = '<input type="hidden" name="'+this.fieldName+'" id="' + this.hiddenFieldName + '_' + this.varname + '" value="{value}" />'
 		this.listService = listService;
 		this.treeService = treeService;
 		if(typeof(options.searcher) != "undefined")				{ this.searcher = options.searcher; }		
@@ -107,17 +107,18 @@ function ModelSearcher(){
 		if(typeof(options.fieldLabel) != "undefined")			{ this.fieldLabel = options.fieldLabel; }
 		if(typeof(options.selectedObjects) != "undefined")		{ this.selectedObjects = options.selectedObjects; }
 		if(typeof(options.hasTree) != "undefined")				{ this.hasTree = options.hasTree; }
-		if(typeof(options.singleSelectionTree) != "undefined")	{ this.singleSelectionTree = options.singleSelectionTree; }
+		if(typeof(options.singleSelection) != "undefined")		{ this.singleSelection = options.singleSelection; }
 		if(typeof(options.proxy) != "undefined")				{ this.proxy = options.proxy; }
 		this.divId = divId;
 		this.table = jQuery('tr[id^=' + this.varname + ']').first().closest('.mobj');
 		this.div = div.length ? div : this.table.wrap('<div />').parent().attr('id',this.divId);
 
-		if ( this.fieldLabel.indexOf('Feature Type') > -1 ) {
+		if (this.searcher) { //( this.fieldLabel.indexOf('Feature Type') > -1 ) {
 			this.div.html(
 						(this.fieldLabel ? '<label for="'+this.fieldName +'_' + this.varname + '">'+this.fieldLabel+'</label>' : '') +
 						'<input type="text" name="searcher_autocomplete" id="searcher_autocomplete_' + this.varname + '" style="'+this.fieldStyle+'" />'+
-						'<input type="hidden" name="'+this.fieldName+'" id="' + this.hiddenFieldName + '_' + this.varname + '" />');
+						this.binHiddenFieldTemplate.replace('{value}', '')
+						);
 		}
 		this.autocompleteInput = jQuery('#searcher_autocomplete_' + this.varname);
 		this.hiddenIdInput = jQuery('#' + this.hiddenFieldName + '_' + this.varname);
@@ -186,25 +187,33 @@ function ModelSearcher(){
 				});
 			}
 		}
-		
-		jQuery('.tree-remove', this.div).unbind('click'); // this and below have to be separate because live can't be chained
-		this.table.delegate('#' + this.divId + ' .tree-remove', 'click', function(){
+		bRow = jQuery('td#' + this.bRowID);
+		jQuery('.tree-remove', bRow).unbind('click'); // this and below have to be separate because live can't be chained
+		bRow.delegate('.tree-remove', 'click', function(){
 			var $selection = jQuery(this).closest('.tree-names'),
 				$target = $selection.siblings().length ? $selection : $selection.closest('tr');
 			
 			$selection.fadeOut( function(){
-				var id = this.id.replace(that.varname + '_bin_item_',''),
+				var id = this.id.replace(that.varname + '_bin_item_',''); /*,
 					regex = new RegExp('(^|,)' + id + '(,|$)'),
-					val = that.hiddenIdInput[0].value;
-					
-				$target.remove();	
-				that.hiddenIdInput[0].value = val.replace(regex, ',');
+					val = that.hiddenIdInput[0].value; */
+				$target.remove();
+				if (that.singleSelection) {
+					that.hiddenIdInput[0].value = '';
+				} else
+				{	/* This doesn't work in safari in unpredictable cases!!!
+				    jQuery('input#' + that.hiddenFieldName + '_' + that.varname + '[value=' + id + ']').remove(); */
+					bRow.find('input#[value=' + id + ']').remove();
+				}
 				that.checkAnnotationState();
 			});
 			return false;
 		});
 		
-		if ( root_topics && root_topics.value != 'All' ) jQuery('#browse_link_' + that.varname).unbind('click').show().click(function(){that.activatePopup()});
+		/* if ( root_topics && root_topics.value != 'All' ) {
+			jQuery('#browse_link_' + that.varname).unbind('click').show().click(function() { that.activatePopup() });
+		}*/
+		jQuery('#browse_link_' + that.varname).unbind('click').click(function() { that.activatePopup() });
 	};
 	
 	this.activatePopup = function() {
@@ -243,7 +252,7 @@ function ModelSearcher(){
 			'For each type, click on the left box to select the type and its subcategories; '+
 			'click on the right box to select only the type without its subcategories.</div><br />'+
 			'<form method="get" action="">'+
-			'<div'+(that.singleSelectionTree ? ' class="single_selection_tree"' : '' )+
+			'<div'+(that.singleSelection ? ' class="single_selection_tree"' : '' )+
 			' style="max-height: 400px; height:auto !important; height: 400px; overflow: auto;">'+
 			that.treeHtml+
 			'</div>'+
@@ -266,7 +275,7 @@ function ModelSearcher(){
 				}
 			});
 			if (ids.length) {
-				if ( that.fieldLabel.indexOf('Feature Type') == -1 ) {
+				if (!this.searcher) { //( that.fieldLabel.indexOf('Feature Type') == -1 ) {
 					that.addValue( ids );
 				} else {
 					that.hiddenIdInput.val(ids.join(','));
@@ -287,23 +296,39 @@ function ModelSearcher(){
 	this.addValue = function( ids ) {
 		var that = this,
 			i,
-			names = [],
-			ids = ids || [],
-			test = document.getElementById(that.bRowID),
-			$bRow = test ? $(test) : jQuery("<tr><td></td><td colspan='2' style='padding-top:1px; padding-bottom:4px' id='" + that.bRowID + "'></td></tr>").insertAfter(jQuery(that.cRowSelector)).find('#' + that.bRowID);
+			ids = ids || [];
+			$bRow = jQuery('td#' + that.bRowID);
+			if ($bRow.length==0) $bRow = jQuery("<tr><td></td><td colspan='2' style='padding-top:1px; padding-bottom:4px' id='" + that.bRowID + "'></td></tr>").insertAfter(jQuery(that.cRowSelector)).find('td#' + that.bRowID);
+		spans = jQuery('span.tree-names', $bRow);
 
-		for(i in ids){
-			if ( !document.getElementById(that.varname + '_bin_item_' + ids[i]) ) {
-				that.selectedObjects.push(that.objectList[ids[i]]);
-				names.push(
-					that.binItemTemplate
-						.replace('{content}', that.objectList[ids[i]].name)
-						.replace('{id}', ids[i])
-				);
+		if (that.singleSelection)
+		{
+			id = ids[0];
+			object = that.objectList[id];
+			that.selectedObjects.push(object);
+			that.hiddenIdInput[0].value = id;
+			if (spans.length==0) {
+				$bRow.append(that.binItemTemplate.replace('{content}', object.name).replace('{id}', id));
+			}
+			else {
+				if (spans.length>1) spans.slice(1).remove();
+				spans.replaceWith(that.binItemTemplate.replace('{content}', object.name).replace('{id}', id));
 			}
 		}
-		that.hiddenIdInput[0].value += ( this.searcher ? '' : ',') + ids.join(',');
-		$bRow.append(names.join(''));
+		else
+		{
+			for(i in ids){
+				if ( jQuery('#'+that.varname+'_bin_item_'+ids[i], $bRow).length==0 ) {
+					that.selectedObjects.push(that.objectList[ids[i]]);
+					$bRow.append(that.binItemTemplate.replace('{content}', that.objectList[ids[i]].name).replace('{id}', ids[i]));
+				}
+				if ( jQuery('input#[value=' + ids[i] + ']', $bRow).length==0 ) {
+					$bRow.append(that.binHiddenFieldTemplate.replace('{value}', ids[i]));
+				}
+			}
+			/* TODO: how to handle searcher!!!
+			that.hiddenIdInput[0].value += ( this.searcher ? '' : ',') + ids.join(','); */
+		}
 		if (!this.searcher) that.autocompleteInput.val('');
 		this.checkAnnotationState();
 	}

@@ -134,8 +134,6 @@ module ActiveSupport
         self
       end
 
-      alias_method :update, :merge!
-
       def merge(other_hash)
         dup.merge!(other_hash)
       end
@@ -145,10 +143,6 @@ module ActiveSupport
         super
         @keys = other.keys
         self
-      end
-
-      def invert
-        OrderedHash[self.to_a.map!{|key_value_pair| key_value_pair.reverse}]
       end
 
       def inspect
