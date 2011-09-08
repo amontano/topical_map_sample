@@ -1,4 +1,4 @@
 <%= f.error_messages %>
-<%=	category_fields :subject => {:label => 'Category'}, :var_name => :category_element_association, :field_name => :category, :include_js => false, :include_styles => true, :selectable => selectable, :single_selection => true,
+<%=	category_fields :subject => {:label => 'Category'}, :var_name => :category_element_association, :field_name => :category, :include_js => false, :include_styles => true, :selectable => selectable, :single_selection => single_selection,
 		:extra_fields => [{:field => f.check_box(:show_parent), :label => CategoryElementAssociation.human_attribute_name(:show_parent).s},
         {:field => f.check_box(:show_root), :label => CategoryElementAssociation.human_attribute_name(:show_root).s}] %>

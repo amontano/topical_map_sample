@@ -99,7 +99,6 @@ function ModelSearcher(){
 		this.cRowSelector = '#' + this.varname + '_characteristic-row';
 		this.bRowID = this.varname + '_bin';
 		this.binItemTemplate = '<span id="' + this.varname + '_bin_item_{id}" class="tree-names" style="line-height:19px;white-space:nowrap;padding:2px 3px 2px 2px; color:#404040; background-color:#f1f1f1; border:1pt #ccc solid;margin-right:3px;font-size:7pt"><a href="#" class="tree-remove"><img src="/images/delete.png" height=16 width=16 border=0 alt="x" style="display:inline;position:relative;top:4px;left:-2px"/></a>{content}</span> ';
-		this.binHiddenFieldTemplate = '<input type="hidden" name="'+this.fieldName+'" id="' + this.hiddenFieldName + '_' + this.varname + '" value="{value}" />'
 		this.listService = listService;
 		this.treeService = treeService;
 		if(typeof(options.searcher) != "undefined")				{ this.searcher = options.searcher; }		
@@ -109,6 +108,7 @@ function ModelSearcher(){
 		if(typeof(options.hasTree) != "undefined")				{ this.hasTree = options.hasTree; }
 		if(typeof(options.singleSelection) != "undefined")		{ this.singleSelection = options.singleSelection; }
 		if(typeof(options.proxy) != "undefined")				{ this.proxy = options.proxy; }
+		this.binHiddenFieldTemplate = '<input type="hidden" name="'+this.fieldName+'" id="' + this.hiddenFieldName + '_' + this.varname + '" value="{value}" />'
 		this.divId = divId;
 		this.table = jQuery('tr[id^=' + this.varname + ']').first().closest('.mobj');
 		this.div = div.length ? div : this.table.wrap('<div />').parent().attr('id',this.divId);
@@ -334,10 +334,17 @@ function ModelSearcher(){
 	}
 	
 	this.checkAnnotationState = function() {
-		if ( jQuery('.tree-names', this.div).length > 1 ) {
-			jQuery('.annotation', this.div).find('input').attr('disabled', 'disabled').closest('tr').fadeOut();
+		bRow = jQuery('td#' + this.bRowID);
+		if ( jQuery('.tree-names', bRow).length > 1 ) {
+			annotations = bRow.parent().nextAll().filter('.annotation');
+			jQuery('input', annotations).attr('disabled', 'disabled');
+			annotations.fadeOut();
+			// jQuery('.annotation', bRow).find('input').closest('tr').fadeOut();
 		} else {
-			jQuery('.annotation', this.div).fadeIn().find('input').removeAttr('disabled');
+			annotations = bRow.parent().nextAll().filter('.annotation');
+			jQuery('input', annotations).removeAttr('disabled');
+			annotations.fadeIn();
+			// jQuery('.annotation', bRow).fadeIn().find('input').removeAttr('disabled');
 		}
 	}
 	

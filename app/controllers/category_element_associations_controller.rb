@@ -42,16 +42,25 @@ class CategoryElementAssociationsController < AclController
   # POST /category_element_associations
   # POST /category_element_associations.xml
   def create
-    @category_element_association = @element.category_element_associations.new(params[:category_element_association])
-
-    respond_to do |format|
-      if @category_element_association.save
-        format.html { redirect_to(element_url(@element), :notice => 'CategoryElementAssociation was successfully created.') }
-        format.xml  { render :xml => @category_element_association, :status => :created, :location => @category_element_association }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @category_element_association.errors, :status => :unprocessable_entity }
+    association_param = params[:category_element_association]
+    category_ids = association_param[:category_id]
+    if category_ids.nil?
+      redirect_to(elements_url)
+    elsif category_ids.size==1
+      association_param[:category_id] = category_ids.first
+      @category_element_association = @element.category_element_associations.new(association_param)
+      respond_to do |format|
+        if @category_element_association.save
+          format.html { redirect_to(elements_url, :notice => 'CategoryElementAssociation was successfully created.') }
+          format.xml  { render :xml => @category_element_association, :status => :created, :location => @category_element_association }
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @category_element_association.errors, :status => :unprocessable_entity }
+        end
       end
+    else
+      category_ids.each{ |c_id| @element.category_element_associations.create :category_id => c_id } if category_ids.size>1
+      redirect_to(elements_url, :notice => 'CategoryElementAssociation was successfully created.')
     end
   end
 
@@ -62,7 +71,7 @@ class CategoryElementAssociationsController < AclController
 
     respond_to do |format|
       if @category_element_association.update_attributes(params[:category_element_association])
-        format.html { redirect_to(element_url(@element), :notice => 'CategoryElementAssociation was successfully updated.') }
+        format.html { redirect_to(elements_url, :notice => 'CategoryElementAssociation was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -78,7 +87,7 @@ class CategoryElementAssociationsController < AclController
     @category_element_association.destroy
 
     respond_to do |format|
-      format.html { redirect_to(element_url(@element)) }
+      format.html { redirect_to(elements_url) }
       format.xml  { head :ok }
     end
   end
