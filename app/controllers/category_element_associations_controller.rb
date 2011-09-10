@@ -1,10 +1,14 @@
 class CategoryElementAssociationsController < AclController
-  before_filter :find_element
+  before_filter :find_element_and_topic
   
   # GET /category_element_associations
   # GET /category_element_associations.xml
   def index
-    @category_element_associations = @element.category_element_associations
+    if @topic.nil?
+      @category_element_associations = @element.category_element_associations
+    else
+      @category_element_associations = @element.category_element_associations.all(:conditions => {:root_id => @topic.id})
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -27,7 +31,6 @@ class CategoryElementAssociationsController < AclController
   # GET /category_element_associations/new.xml
   def new
     @category_element_association = @element.category_element_associations.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @category_element_association }
@@ -48,6 +51,7 @@ class CategoryElementAssociationsController < AclController
       redirect_to(elements_url)
     elsif category_ids.size==1
       association_param[:category_id] = category_ids.first
+      association_param[:root_id] = Category.find(association_param[:category_id]).root.id
       @category_element_association = @element.category_element_associations.new(association_param)
       respond_to do |format|
         if @category_element_association.save
@@ -59,7 +63,7 @@ class CategoryElementAssociationsController < AclController
         end
       end
     else
-      category_ids.each{ |c_id| @element.category_element_associations.create :category_id => c_id } if category_ids.size>1
+      category_ids.each{ |c_id| @element.category_element_associations.create :category_id => c_id, :root_id => Category.find(c_id).root.id } if category_ids.size>1
       redirect_to(elements_url, :notice => 'CategoryElementAssociation was successfully created.')
     end
   end
@@ -94,7 +98,8 @@ class CategoryElementAssociationsController < AclController
   
   private
   
-  def find_element
-    @element = Element.find(params[:element_id])
+  def find_element_and_topic
+    @element = params[:element_id].blank? ? nil : Element.find(params[:element_id])
+    @topic = params[:topic_id].blank? ? nil : Category.find(params[:topic_id])
   end
 end

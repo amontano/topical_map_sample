@@ -1,8 +1,6 @@
 class CategoryElementAssociation < ActiveRecord::Base
   validates_presence_of :category_id
-  
-  belongs_to :category
-  belongs_to :element  
+  belongs_to :element
   
   def category_header
     return '' if !self.show_root? && !self.show_parent?
@@ -11,6 +9,16 @@ class CategoryElementAssociation < ActiveRecord::Base
     prefix << self.category.parent.title if self.show_parent?
     return "#{prefix.join(': ')} -"
   end
+  
+  def category
+    Category.find(self.category_id)
+  end
+  
+  def root
+    Category.find(self.root_id)
+  end
+  
+  
 end
 
 # == Schema Info

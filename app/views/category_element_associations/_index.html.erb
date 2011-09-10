@@ -7,6 +7,8 @@
 <%   end %>
      </ul>
 <% end
-   authorized_only hash_for_new_element_category_association_path do %>
-     <p><%= link_to 'Add more', new_element_category_association_path(element) %></p>
+   authorized_only hash_for_new_element_category_association_path do
+	 links = [link_to('Add more', new_element_category_association_path(element))] %>
+<%   links += element.roots.collect{|c| link_to "#{c.title}", associations_path(element, c) } %>
+     <p><%= links.join(' | ') %></p>
 <% end %>

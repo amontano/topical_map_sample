@@ -2,7 +2,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :elements do |element|
     element.resources(:category_associations, :controller => 'category_element_associations')
   end
-
+  map.resources :associations, :controller => 'category_element_associations', :path_prefix => 'elements/:element_id/topics/:topic_id'
+  
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

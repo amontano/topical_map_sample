@@ -1,3 +1,8 @@
+function include(arr, obj) {
+    for(var i=0; i<arr.length; i++) if (arr[i] == obj) return true;
+    return false;
+}
+
 function ModelSearcher(){
 	// URL for JSON that lists categories in the form [{"name":"Agricultrure","id":4074},{"name":"Agriculture","id":2558}]
 	this.listService = "";
@@ -166,6 +171,7 @@ function ModelSearcher(){
 					thisModelSearcher.treeNames.html('');
 					thisModelSearcher.treeRemove.hide();
 					thisModelSearcher.hiddenIdInput.val('');
+					thisModelSearcher.selectedObjects = []
 					return false;
 				});
 				this.treeLink.click(function(){
@@ -275,13 +281,27 @@ function ModelSearcher(){
 				}
 			});
 			if (ids.length) {
-				if (!this.searcher) { //( that.fieldLabel.indexOf('Feature Type') == -1 ) {
-					that.addValue( ids );
-				} else {
-					that.hiddenIdInput.val(ids.join(','));
+				if (that.searcher) { //( that.fieldLabel.indexOf('Feature Type') == -1 ) {
+					for(i in ids) {
+						id = ids[i]
+						id_int = parseInt(id)
+						if (!include(that.selectedObjects, id_int))
+						{
+							that.selectedObjects.push(id_int)
+							if (that.hiddenIdInput[0].value.length==0) {
+								that.hiddenIdInput.val(id);
+								that.treeNames.html(':<br />'+names[i]);
+							}
+							else {
+								that.hiddenIdInput.val(that.hiddenIdInput[0].value+','+id);
+								that.treeNames.html(that.treeNames[0].innerHTML + ', ' + names[i]);
+							}
+						}
+					}
 					that.autocompleteInput.val('');
-					that.treeNames.html(':<br />'+names.join(', '));
 					that.treeRemove.show();
+				} else {
+					that.addValue( ids );
 				}
 			}
 			jQuery('#'+that.treePopupId).hide();
@@ -298,39 +318,57 @@ function ModelSearcher(){
 			i,
 			ids = ids || [];
 			$bRow = jQuery('td#' + that.bRowID);
+		if (that.searcher) {
+			for(i in ids) {
+				id = ids[i]
+				object = that.objectList[id];
+				if (!include(that.selectedObjects, id))
+				{
+					that.selectedObjects.push(id)
+					if (that.hiddenIdInput[0].value.length==0) {
+						that.hiddenIdInput.val(id);
+						that.treeNames.html(':<br />'+object.name);
+					}
+					else {
+						that.hiddenIdInput.val(that.hiddenIdInput[0].value+','+id);
+						that.treeNames.html(that.treeNames[0].innerHTML + ', ' + object.name);
+					}
+				}
+			}
+			that.treeRemove.show();
+		} else {
 			if ($bRow.length==0) $bRow = jQuery("<tr><td></td><td colspan='2' style='padding-top:1px; padding-bottom:4px' id='" + that.bRowID + "'></td></tr>").insertAfter(jQuery(that.cRowSelector)).find('td#' + that.bRowID);
-		spans = jQuery('span.tree-names', $bRow);
-
-		if (that.singleSelection)
-		{
-			id = ids[0];
-			object = that.objectList[id];
-			that.selectedObjects.push(object);
-			that.hiddenIdInput[0].value = id;
-			if (spans.length==0) {
-				$bRow.append(that.binItemTemplate.replace('{content}', object.name).replace('{id}', id));
-			}
-			else {
-				if (spans.length>1) spans.slice(1).remove();
-				spans.replaceWith(that.binItemTemplate.replace('{content}', object.name).replace('{id}', id));
-			}
-		}
-		else
-		{
-			for(i in ids){
-				if ( jQuery('#'+that.varname+'_bin_item_'+ids[i], $bRow).length==0 ) {
-					that.selectedObjects.push(that.objectList[ids[i]]);
-					$bRow.append(that.binItemTemplate.replace('{content}', that.objectList[ids[i]].name).replace('{id}', ids[i]));
+			if (that.singleSelection)
+			{
+				id = ids[0];
+				object = that.objectList[id];
+				that.selectedObjects.push(object);
+				that.hiddenIdInput[0].value = id;
+				spans = jQuery('span.tree-names', $bRow);
+				if (spans.length==0) {
+					$bRow.append(that.binItemTemplate.replace('{content}', object.name).replace('{id}', id));
 				}
-				if ( jQuery('input#[value=' + ids[i] + ']', $bRow).length==0 ) {
-					$bRow.append(that.binHiddenFieldTemplate.replace('{value}', ids[i]));
+				else {
+					if (spans.length>1) spans.slice(1).remove();
+					spans.replaceWith(that.binItemTemplate.replace('{content}', object.name).replace('{id}', id));
 				}
 			}
-			/* TODO: how to handle searcher!!!
-			that.hiddenIdInput[0].value += ( this.searcher ? '' : ',') + ids.join(','); */
+			else
+			{
+				for(i in ids){
+					id = ids[i]
+					if ( jQuery('#'+that.varname+'_bin_item_'+id, $bRow).length==0 ) {
+						that.selectedObjects.push(that.objectList[id]);
+						$bRow.append(that.binItemTemplate.replace('{content}', that.objectList[id].name).replace('{id}', id));
+					}
+					if ( jQuery('input#[value=' + id + ']', $bRow).length==0 ) {
+						$bRow.append(that.binHiddenFieldTemplate.replace('{value}', id));
+					}
+				}
+			}
+			this.checkAnnotationState();
 		}
-		if (!this.searcher) that.autocompleteInput.val('');
-		this.checkAnnotationState();
+		that.autocompleteInput.val('');
 	}
 	
 	this.checkAnnotationState = function() {
@@ -374,11 +412,10 @@ function ModelSearcher(){
 		if(data){
 			thisModelSearcher.addValue([data.id])
 		}else{
-			//thisModelSearcher.hiddenIdInput.val('');
+			thisModelSearcher.hiddenIdInput.val('');
 		}
-		
-		//thisModelSearcher.treeNames.html('');
-		//thisModelSearcher.treeRemove.hide();
+		/* thisModelSearcher.treeNames.html('');
+		thisModelSearcher.treeRemove.hide(); */
 		return false;
 	};
 	

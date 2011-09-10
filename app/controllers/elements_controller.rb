@@ -47,7 +47,7 @@ class ElementsController < AclController
     respond_to do |format|
       if @element.save
         associations = @element.category_element_associations
-        associations_param[:category_ids].each{|c_id| associations.create :category_id => c_id.to_i}
+        associations_param[:category_ids].each{|c_id| associations.create :category_id => c_id.to_i, :root_id => Category.find(c_id).root.id}
         flash[:notice] = 'Element was successfully created.'
         format.html { redirect_to elements_url }
         format.xml  { render :xml => @element, :status => :created, :location => @element }
@@ -71,7 +71,7 @@ class ElementsController < AclController
         associated_category_ids = associations.collect(&:category_id)
         category_ids_to_be_associated = associations_param[:category_ids].collect(&:to_i)
         (associated_category_ids - category_ids_to_be_associated).each{|c_id| associations.all(:conditions => {:category_id => c_id}).each(&:destroy)}
-        (category_ids_to_be_associated - associated_category_ids).each{|c_id| associations.create :category_id => c_id.to_i}
+        (category_ids_to_be_associated - associated_category_ids).each{|c_id| associations.create :category_id => c_id, :root_id => Category.find(c_id).root.id}
         flash[:notice] = 'Element was successfully updated.'
         format.html { redirect_to elements_url }
         format.xml  { head :ok }
