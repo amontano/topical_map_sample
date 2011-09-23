@@ -19,7 +19,7 @@ class Element < ActiveRecord::Base
 end
 
 # == Schema Info
-# Schema version: 20110905224343
+# Schema version: 20110923200413
 #
 # Table name: elements
 #

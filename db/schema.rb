@@ -9,16 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110910194936) do
+ActiveRecord::Schema.define(:version => 20110923200413) do
 
   create_table "category_element_associations", :force => true do |t|
-    t.integer  "category_id",                    :null => false
-    t.integer  "element_id",                     :null => false
+    t.integer  "category_id",                     :null => false
+    t.integer  "element_id",                      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "show_parent", :default => false, :null => false
-    t.boolean  "show_root",   :default => true,  :null => false
-    t.integer  "root_id",                        :null => false
+    t.boolean  "show_parent",  :default => false, :null => false
+    t.boolean  "show_root",    :default => true,  :null => false
+    t.integer  "root_id",                         :null => false
+    t.string   "label"
+    t.boolean  "prefix_label", :default => true,  :null => false
   end
 
   create_table "elements", :force => true do |t|
