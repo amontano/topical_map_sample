@@ -2,10 +2,12 @@ class CategoryElementAssociation < ActiveRecord::Base
   validates_presence_of :category_id
   belongs_to :element
   
+  FIXED = {286 => 'grammatical_function_associations', 272 => 'subject_associations'}
+  
   def category_stack
     stack = []
     stack << self.label if !label.blank? && self.prefix_label
-    stack << self.category.root.title if self.show_root?
+    stack << self.root.title if self.show_root?
     stack << self.category.parent.title if self.show_parent?
     stack << self.category.title
     stack.last << " #{self.label}" if !label.blank? && !self.prefix_label

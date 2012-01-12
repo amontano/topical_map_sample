@@ -5,6 +5,10 @@ class Element < ActiveRecord::Base
   #belongs_to :second_category, :class_name => 'Category'
   has_many :category_element_associations, :dependent => :destroy
   
+  CategoryElementAssociation::FIXED.each_pair{|root_id, associations| has_many associations, :dependent => :destroy, :class_name => 'CategoryElementAssociation', :conditions => {:root_id => root_id} }  
+  has_many :not_fixed_associations, :dependent => :destroy, :class_name => 'CategoryElementAssociation', :conditions => ["root_id NOT IN (#{Array.new(CategoryElementAssociation::FIXED.size, '?').join(',')})"] + CategoryElementAssociation::FIXED.keys
+
+  
   def category
     Category.find(self.category_id)
   end

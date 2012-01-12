@@ -2,4 +2,7 @@
 <p><%= f.label :title %><br /><%= f.text_field :title %></p>
 <%=	category_fields :subject => {:label => 'Single specific association (subject)'}, :root => @root_category, :var_name => :element, :field_name => :category, :include_js => false, :include_styles => true, :selectable => selectable, :single_selection => true %>
 <%=	category_fields :subject => {:label => 'Single generic association'}, :var_name => :element, :field_name => :second_category, :include_js => false, :include_styles => false, :selectable => selectable, :single_selection => true %>
-<%=	category_fields :subject => {:label => 'Multiple associations'}, :var_name => :element, :field_name => [:category_element_associations, :category], :include_js => false, :include_styles => false, :selectable => selectable, :single_selection => false %>
+<%=	category_fields :subject => {:label => 'Multiple associations'}, :var_name => :element, :field_name => [:not_fixed_associations, :category], :include_js => false, :include_styles => false, :selectable => selectable, :single_selection => false %>
+<%  CategoryElementAssociation::FIXED.each_pair do |root_id, associations| %>
+<%=	  category_fields :subject => {:label => associations.humanize.titleize, :display => hidden_field_tag("element[#{associations}][root_id]", root_id)}, :root => Category.find(root_id), :var_name => :element, :field_name => [associations, :category], :show_dropdown => false, :include_js => false, :include_styles => false, :selectable => selectable, :single_selection => false %>
+<%  end %>

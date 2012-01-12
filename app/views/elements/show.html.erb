@@ -1,6 +1,6 @@
 <%= display_if_not_blank 'Title', h(@element.title) %>
-<%= display_if_not_blank 'Single Specific Association (Subject)', h(@element.category.title) %>
-<%= display_if_not_blank 'Single Generic Association', h(@element.second_category.title) %>
+<%= display_if_not_blank('Single Specific Association (Subject)', h(@element.category.title)) if !@element.category.nil? %>
+<%= display_if_not_blank('Single Generic Association', h(@element.second_category.title)) if !@element.second_category.nil? %>
 <%  associations = @element.category_element_associations
     if !associations.empty? %>
       <p><b>Multiple associations:</b>
