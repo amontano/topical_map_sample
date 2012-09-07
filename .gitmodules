@@ -22,6 +22,3 @@
 [submodule "vendor/plugins/rails_upgrade"]
 	path = vendor/plugins/rails_upgrade
 	url = git://github.com/amontano/rails_upgrade.git
-[submodule "restful-authentication"]
-	path = restful-authentication
-	url = git://github.com/Satish/restful-authentication.git
