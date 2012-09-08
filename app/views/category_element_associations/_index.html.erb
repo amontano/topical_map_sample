@@ -4,7 +4,7 @@
        <li>
 <%       stack = association.category_stack
          stack.push(link_to(h(stack.pop), authorized?(hash_for_edit_element_category_association_path) ? edit_element_category_association_path(element, association) : element_category_association_path(element, association))) %>
-<%=      stack.join(' > ') %>
+<%=      stack.join(' > ').html_safe %>
        </li>
 <%   end %>
      </ul>
