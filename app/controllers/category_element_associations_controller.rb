@@ -32,7 +32,8 @@ class CategoryElementAssociationsController < AclController
   def new
     @category_element_association = @element.category_element_associations.new
     respond_to do |format|
-      format.html { render :partial => 'new' if request.xhr? }# new.html.erb
+      format.html # new.html.erb
+      format.js   { render 'new' }
       format.xml  { render :xml => @category_element_association }
     end
   end

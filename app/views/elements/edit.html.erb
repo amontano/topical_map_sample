@@ -1,5 +1,5 @@
 <h1>Editing element</h1>
-<% form_for(@element) do |f| %>
+<%= form_for(@element) do |f| %>
 <%=   category_form_table :locals => { :f => f, :selectable => true}, :form_partial => 'form', :footer => globalized_submit_tag('update.this', :style => 'margin-top:8px;') %>
-<% end %>
+<%  end %>
 <p><%= render :partial => 'persistent_links' %></p>

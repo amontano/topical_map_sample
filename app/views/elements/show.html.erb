@@ -9,7 +9,7 @@
 <%    end %>
 <%=   render :partial => 'category_element_associations/index', :locals => {:category_associations => associations, :element => @element} %></p>
 <%  end %>
-<p><% authorized_only hash_for_edit_element_path do %>
+<p><% if authorized? hash_for_edit_element_path %>
 <%=  link_to ts('edit.this'), edit_element_path(@element) %> |
 <% end %>
 <%= render :partial => 'persistent_links' %>

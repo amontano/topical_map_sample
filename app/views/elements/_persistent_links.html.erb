@@ -1,4 +1,4 @@
-<%  authorized_only hash_for_element_path(:action => 'destroy') do %>
+<%  if authorized? hash_for_element_path(:action => 'destroy') %>
 <%=   link_to ts('delete.this'), @element, :confirm => te('delete.confirmation'), :method => :delete %> |
 <%  end %>
 <%= link_to 'Back to elements', elements_path %></p>
