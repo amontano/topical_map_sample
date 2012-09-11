@@ -10,7 +10,7 @@
      </ul>
 <% end
    if authorized? hash_for_new_element_category_association_path
-	 links = [link_to('Add more', new_element_category_association_path(element)), link_to('Add more with UI', new_element_category_association_path(element), :remote => true, :html => {:class => 'ui_dialog'})] %>
-<%   links += element.roots.collect{|c| link_to "#{c.title}", associations_path(element, c) } %>
-     <p><%= links.join(' | ') %></p>
+	 links = [link_to('Add more', new_element_category_association_path(element)), link_to('Add more with UI', new_element_category_association_path(element), :remote => true, :class => 'ui_dialog')] %>
+<%   links += element.roots.collect{|c| link_to "#{c.title}", element_associations_path(element, c) } %>
+     <p><%= links.join(' | ').html_safe %></p>
 <% end %>
