@@ -1,6 +1,6 @@
 module ElementsHelper
   def javascript_files
-    uses_kmaps_integration ? super + ['jquery-ui', 'jquery.autocomplete', 'jquery.checktree', 'model-searcher', 'jquery.draggable.popup'] : super + ['ui-handler']
+    uses_kmaps_integration ? super + ['jquery-ui', 'jquery.autocomplete', 'jquery.checktree', 'model-searcher', 'jquery.draggable.popup', 'ui-handler'] : super + ['ui-handler']
   end
   
   def stylesheet_files
