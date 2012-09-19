@@ -25,3 +25,9 @@
 [submodule "vendor/plugins/restful-authentication"]
 	path = vendor/plugins/restful-authentication
 	url = git://github.com/Satish/restful-authentication.git
+[submodule "passiverecord"]
+	path = passiverecord
+	url = git://github.com/ambethia/passiverecord.git
+[submodule "vendor/plugins/passiverecord"]
+	path = vendor/plugins/passiverecord
+	url = git://github.com/ambethia/passiverecord.git
